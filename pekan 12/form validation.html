@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Formulir Validasi</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <form id="formulir" onsubmit="validateForm(event)">
+        <label for="nama">Nama:</label>
+        <input type="text" id="nama" maxlength="30" required><br><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" required><br><br>
+        <label for="waktu">Waktu Keberangkatan:</label>
+        <input type="text" id="waktu" placeholder="Format: HH:mm" required><br><br>
+        <label for="jumlah">Jumlah Tiket:</label>
+        <input type="number" id="jumlah" min="1" required><br><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <div id="error" class="error" style="display: none;"></div>
+
+    <div id="hasil" style="display: none;">
+        <h2>Data Formulir:</h2>
+        <p id="namaHasil"></p>
+        <p id="emailHasil"></p>
+        <p id="waktuHasil"></p>
+        <p id="jumlahHasil"></p>
+    </div>
+
+    <script>
+        function validateForm(event) {
+            event.preventDefault(); // Mencegah form untuk melakukan submit
+
+            var nama = document.getElementById("nama").value;
+            var email = document.getElementById("email").value;
+            var waktu = document.getElementById("waktu").value;
+            var jumlah = document.getElementById("jumlah").value;
+
+            var errorMessages = [];
+
+            if (nama.length > 30) {
+                errorMessages.push("Nama tidak boleh lebih dari 30 karakter");
+            }
+
+            if (!emailIsValid(email)) {
+                errorMessages.push("Format email tidak valid");
+            }
+
+            if (!waktuIsValid(waktu)) {
+                errorMessages.push("Format waktu tidak valid (hh:mm)");
+            }
+
+            if (jumlah < 1 || !Number.isInteger(Number(jumlah))) {
+                errorMessages.push("Jumlah tiket harus bilangan bulat positif");
+            }
+
+            var errorDiv = document.getElementById("error");
+            if (errorMessages.length > 0) {
+                errorDiv.innerHTML = errorMessages.join("<br>");
+                errorDiv.style.display = "block";
+                document.getElementById("hasil").style.display = "none";
+            } else {
+                errorDiv.style.display = "none";
+                document.getElementById("hasil").style.display = "block";
+                document.getElementById("namaHasil").textContent = "Nama: " + nama;
+                document.getElementById("emailHasil").textContent = "Email: " + email;
+                document.getElementById("waktuHasil").textContent = "Waktu Keberangkatan: " + waktu;
+                document.getElementById("jumlahHasil").textContent = "Jumlah Tiket: " + jumlah;
+            }
+        }
+
+        function emailIsValid(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function waktuIsValid(waktu) {
+            return /^([01]\d|2[0-3]):([0-5]\d)$/.test(waktu);
+        }
+    </script>
+</body>
+</html>
+
